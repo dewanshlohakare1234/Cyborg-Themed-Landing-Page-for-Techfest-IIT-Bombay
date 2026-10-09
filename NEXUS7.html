@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS-7 | Human Evolution Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   NEXUS-7 | CYBORG LANDING PAGE STYLES
+   ============================================================ */
+:root {
+  --bg:       #03070f;
+  --bg-card:  #070d1a;
+  --bg-card2: #0a1220;
+  --cyan:     #00ffff;
+  --red:      #ff0044;
+  --neon:     #39ff14;
+  --white:    #e8f0ff;
+  --muted:    #5a6a80;
+  --border:   rgba(0, 255, 255, 0.15);
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-hud:  'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --section-gap: clamp(5rem, 10vw, 9rem);
+  --radius: 4px;
+  --glow-cyan: 0 0 8px rgba(0,255,255,0.6), 0 0 24px rgba(0,255,255,0.25);
+  --glow-red:  0 0 8px rgba(255,0,68,0.7),  0 0 24px rgba(255,0,68,0.3);
+  --glow-neon: 0 0 8px rgba(57,255,20,0.7), 0 0 24px rgba(57,255,20,0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { background-color: var(--bg); color: var(--white); font-family: var(--font-body); overflow-x: hidden; position: relative; line-height: 1.65; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+button { cursor: pointer; background: none; border: none; }
+
+/* --- BACKGROUND --- */
+#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.55; }
+.scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 1; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px); }
+.hud-corner { position: fixed; width: 30px; height: 30px; z-index: 999; pointer-events: none; }
+.hud-tl { top: 12px; left: 12px;  border-top: 2px solid var(--cyan); border-left:  2px solid var(--cyan); }
+.hud-tr { top: 12px; right: 12px; border-top: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+.hud-bl { bottom: 12px; left: 12px;  border-bottom: 2px solid var(--cyan); border-left:  2px solid var(--cyan); }
+.hud-br { bottom: 12px; right: 12px; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+
+/* --- NAVBAR --- */
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 900; display: flex; align-items: center; gap: 1.5rem; padding: .8rem 2rem; background: rgba(3,7,15,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: background .3s; }
+.nav-brand { font-family: var(--font-hud); font-size: 1.25rem; font-weight: 900; letter-spacing: .1em; flex-shrink: 0; }
+.brand-bracket { color: var(--muted); }
+.brand-accent  { color: var(--red); text-shadow: var(--glow-red); }
+.brand-text    { color: var(--cyan); }
+.nav-links { display: flex; gap: .25rem; align-items: center; margin-left: auto; }
+.nav-link { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; padding: .45rem .75rem; color: var(--muted); border: 1px solid transparent; border-radius: var(--radius); transition: color .2s, border-color .2s, text-shadow .2s; }
+.nav-link:hover, .nav-link:focus-visible { color: var(--cyan); border-color: var(--border); text-shadow: var(--glow-cyan); outline: none; }
+.nav-link--cta { background: rgba(0,255,255,0.08); border-color: var(--border); color: var(--cyan); }
+.nav-link--cta:hover { background: rgba(0,255,255,0.18); box-shadow: var(--glow-cyan); }
+.nav-status { display: flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: .65rem; color: var(--neon); white-space: nowrap; opacity: .8; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 8px var(--neon); animation: blink 2s steps(1) infinite; }
+.status-dot--red { background: var(--red); box-shadow: var(--glow-red); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; padding: .4rem; margin-left: auto; }
+.toggle-line { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform .3s, opacity .3s; }
+
+/* --- SECTIONS --- */
+.section { position: relative; z-index: 2; padding: var(--section-gap) clamp(1.25rem, 5vw, 5rem); }
+.section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 3.5rem; }
+.section-prefix { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); white-space: nowrap; }
+.section-title { font-family: var(--font-hud); font-size: clamp(1rem, 2.5vw, 1.4rem); font-weight: 700; color: var(--cyan); letter-spacing: .15em; white-space: nowrap; }
+.section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+
+/* --- BUTTONS --- */
+.btn { display: inline-flex; position: relative; overflow: hidden; border-radius: var(--radius); font-family: var(--font-mono); font-size: .8rem; letter-spacing: .12em; transition: transform .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn-inner { display: flex; align-items: center; gap: .5rem; padding: .75rem 1.75rem; position: relative; z-index: 1; }
+.btn-icon { font-size: 1rem; }
+.btn--primary { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
+.btn--primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,255,255,0.12), rgba(0,255,255,0.04)); }
+.btn--primary:hover { box-shadow: var(--glow-cyan); }
+.btn-glow { position: absolute; inset: -2px; background: linear-gradient(135deg, var(--cyan), transparent); opacity: 0; transition: opacity .3s; z-index: 0; border-radius: var(--radius); }
+.btn--primary:hover .btn-glow { opacity: .08; }
+.btn--ghost { border: 1px solid var(--muted); color: var(--muted); }
+.btn--ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+.btn--full { width: 100%; justify-content: center; }
+
+/* --- HERO --- */
+.hero { min-height: 100svh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 3rem; padding: 8rem clamp(1.25rem, 5vw, 5rem) 5rem; position: relative; z-index: 2; overflow: hidden; }
+.eye-container { display: flex; justify-content: center; align-items: center; }
+.eye-outer { position: relative; width: clamp(260px, 32vw, 420px); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.eye-ring { position: absolute; border-radius: 50%; border: 1px solid; }
+.ring-1 { inset: 0;   border-color: rgba(0,255,255,0.2);  animation: spin 18s linear infinite; }
+.ring-2 { inset: 12%; border-color: rgba(0,255,255,0.35); border-style: dashed; animation: spin 12s linear infinite reverse; }
+.ring-3 { inset: 25%; border-color: rgba(255,0,68,0.3);   animation: spin 8s  linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.eye-iris { position: relative; width: 42%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(0,255,255,0.4), rgba(0,255,255,0.05) 60%, transparent); border: 2px solid var(--cyan); box-shadow: var(--glow-cyan), inset 0 0 30px rgba(0,255,255,0.15); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.eye-pupil { width: 45%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #000 40%, var(--red) 100%); box-shadow: 0 0 12px var(--red), inset 0 0 8px rgba(255,0,68,0.5); position: relative; z-index: 1; }
+.eye-scan { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--red), transparent); animation: scan 3s ease-in-out infinite; }
+@keyframes scan { 0%{top:0%;opacity:0} 20%{opacity:1} 80%{opacity:1} 100%{top:100%;opacity:0} }
+.eye-data-stream { position: absolute; top: 50%; right: -45%; transform: translateY(-50%); display: flex; flex-direction: column; gap: .3rem; font-family: var(--font-mono); font-size: .55rem; color: rgba(0,255,255,0.4); white-space: nowrap; }
+.hero-content { display: flex; flex-direction: column; gap: 1.5rem; }
+.hero-tag { display: flex; align-items: center; gap: .75rem; font-family: var(--font-mono); font-size: .65rem; color: var(--muted); letter-spacing: .12em; }
+.tag-line { flex: 1; height: 1px; background: var(--border); max-width: 40px; }
+.hero-title { display: flex; flex-direction: column; gap: .25rem; }
+.title-line { display: block; }
+.title-line--sub  { font-family: var(--font-mono); font-size: clamp(.75rem,1.5vw,1rem); color: var(--muted); letter-spacing: .2em; }
+.title-line--main { font-family: var(--font-hud); font-size: clamp(2.8rem,7vw,6rem); font-weight: 900; color: var(--cyan); letter-spacing: .08em; text-shadow: var(--glow-cyan); line-height: 1; }
+.title-line--accent { font-family: var(--font-hud); font-size: clamp(1rem,2vw,1.5rem); color: var(--red); letter-spacing: .18em; text-shadow: var(--glow-red); }
+.glitch-text { position: relative; }
+.glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; }
+.glitch-text::before { color: var(--red);  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); animation: glitch1 5s infinite steps(1); text-shadow: -2px 0 var(--red);  }
+.glitch-text::after  { color: var(--neon); clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); animation: glitch2 5s infinite steps(1); text-shadow:  2px 0 var(--neon); }
+@keyframes glitch1 { 0%,88%,100%{transform:none;opacity:0} 90%{transform:translateX(-3px);opacity:.8} 92%{transform:translateX(3px);opacity:.6} 94%{transform:none;opacity:0} }
+@keyframes glitch2 { 0%,84%,100%{transform:none;opacity:0} 86%{transform:translateX(4px);opacity:.7} 89%{transform:translateX(-2px);opacity:.5} 91%{transform:none;opacity:0} }
+.hero-subtitle { font-size: clamp(1rem,1.5vw,1.2rem); color: rgba(232,240,255,0.7); max-width: 50ch; line-height: 1.7; }
+.hero-subtitle em { color: var(--cyan); font-style: normal; }
+.hero-subtitle strong { color: var(--red); }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero-counters { display: flex; align-items: center; gap: 1.5rem; margin-top: .5rem; }
+.counter-item { display: flex; flex-direction: column; }
+.counter-val   { font-family: var(--font-hud); font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 700; color: var(--cyan); }
+.counter-unit  { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+.counter-label { font-family: var(--font-mono); font-size: .6rem; color: var(--muted); letter-spacing: .15em; }
+.counter-divider { font-family: var(--font-mono); color: var(--border); font-size: 1.2rem; }
+.typed-word { color: var(--neon); border-right: 2px solid var(--neon); padding-right: 2px; animation: cursor-blink .7s steps(1) infinite; font-style: normal; }
+@keyframes cursor-blink { 50%{ border-color: transparent; } }
+.scroll-indicator { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .6rem; color: var(--muted); letter-spacing: .15em; }
+.scroll-bar  { width: 2px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 1px; overflow: hidden; }
+.scroll-fill { width: 100%; height: 40%; background: var(--cyan); animation: scroll-anim 2s ease-in-out infinite; }
+@keyframes scroll-anim { 0%{transform:translateY(-100%)} 100%{transform:translateY(300%)} }
+
+/* --- TICKER --- */
+.ticker-wrap  { position: relative; z-index: 2; width: 100%; overflow: hidden; background: rgba(0,255,255,0.05); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: .55rem 0; }
+.ticker-track { display: flex; gap: 2rem; white-space: nowrap; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; color: var(--cyan); animation: ticker-scroll 30s linear infinite; }
+.ticker-sep { color: var(--muted); }
+@keyframes ticker-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* --- ABOUT --- */
+.about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: center; }
+.body-diagram { position: relative; max-width: 240px; margin: 0 auto; }
+.body-diagram svg { width: 100%; }
+.pulse-dot  { animation: pulse-opacity 2s ease-in-out infinite; }
+.pulse-core { animation: pulse-core 2.5s ease-in-out infinite; }
+@keyframes pulse-opacity { 0%,100%{opacity:1} 50%{opacity:0.2} }
+@keyframes pulse-core    { 0%,100%{rx:7;ry:9} 50%{rx:11;ry:14} }
+.diagram-label { position: absolute; font-family: var(--font-mono); font-size: .55rem; color: var(--cyan); letter-spacing: .1em; white-space: nowrap; }
+.diagram-label--red { color: var(--red); }
+.about-intro { font-size: clamp(1rem,1.4vw,1.15rem); color: rgba(232,240,255,0.75); max-width: 58ch; margin-bottom: 2rem; line-height: 1.75; }
+.about-pillars { display: flex; flex-direction: column; gap: 1.5rem; }
+.pillar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 2rem 1fr auto; grid-template-rows: auto auto auto; column-gap: .75rem; row-gap: .25rem; transition: border-color .25s, box-shadow .25s; }
+.pillar:hover, .pillar:focus-visible { border-color: var(--cyan); box-shadow: var(--glow-cyan); outline: none; }
+.pillar-icon  { grid-row: 1/3; color: var(--cyan); font-size: 1.4rem; display: flex; align-items: center; }
+.pillar-title { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; color: var(--cyan); grid-column: 2; grid-row: 1; }
+.pillar-pct   { font-family: var(--font-hud); font-size: .9rem; color: var(--neon); grid-column: 3; grid-row: 1/3; align-self: center; }
+.pillar-desc  { grid-column: 2; grid-row: 2; font-size: .85rem; color: var(--muted); line-height: 1.5; }
+.pillar-bar   { grid-column: 1/4; grid-row: 3; height: 2px; background: rgba(255,255,255,0.06); border-radius: 1px; margin-top: .75rem; overflow: hidden; }
+.pillar-fill  { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--neon)); width: 0; transition: width 1.5s cubic-bezier(.17,.67,.38,1); }
+
+/* --- FEATURES --- */
+.features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+.feat-card--wide { grid-column: 1 / -1; }
+.feat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; display: flex; flex-direction: column; gap: .75rem; transition: border-color .3s, box-shadow .3s, transform .2s; position: relative; overflow: hidden; }
+.feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: 0; transition: opacity .3s; }
+.feat-card:hover, .feat-card:focus-visible { border-color: rgba(0,255,255,0.35); box-shadow: 0 8px 30px rgba(0,0,0,0.4), var(--glow-cyan); transform: translateY(-4px); outline: none; }
+.feat-card:hover::before { opacity: 1; }
+.feat-card--highlight { border-color: rgba(255,0,68,0.25); }
+.feat-card--highlight::before { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+.feat-card--highlight:hover { border-color: rgba(255,0,68,0.5); box-shadow: 0 8px 30px rgba(0,0,0,0.4), var(--glow-red); }
+.feat-card__top { display: flex; justify-content: space-between; align-items: flex-start; }
+.feat-icon { color: var(--cyan); }
+.feat-card--highlight .feat-icon { color: var(--red); }
+.feat-badge { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; color: var(--muted); border: 1px solid var(--border); padding: .2rem .5rem; border-radius: 2px; }
+.feat-badge--accent { color: var(--red);  border-color: rgba(255,0,68,0.2); }
+.feat-badge--wide   { color: var(--neon); border-color: rgba(57,255,20,0.2); }
+.feat-title { font-family: var(--font-mono); font-size: .9rem; letter-spacing: .12em; color: var(--white); }
+.feat-card--highlight .feat-title { color: var(--red); text-shadow: var(--glow-red); }
+.feat-desc { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+.feat-specs { display: flex; flex-direction: column; gap: .35rem; margin-top: auto; }
+.feat-specs--row { flex-direction: row; flex-wrap: wrap; gap: .75rem; }
+.feat-specs li { display: flex; justify-content: space-between; align-items: center; }
+.feat-specs--row li { flex-direction: column; gap: .1rem; }
+.spec-key { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .1em; color: var(--muted); }
+.spec-val { font-family: var(--font-mono); font-size: .72rem; color: var(--cyan); }
+.feat-card--highlight .spec-val { color: var(--red); }
+.feat-footer { margin-top: .5rem; }
+.feat-status { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; color: var(--neon); display: flex; align-items: center; gap: .4rem; }
+.feat-status .status-dot { background: var(--neon); box-shadow: 0 0 6px var(--neon); }
+.feat-status--red { color: var(--red); }
+.feat-status--red .status-dot { background: var(--red); box-shadow: var(--glow-red); }
+
+/* --- STATS --- */
+.stats-section { background: var(--bg-card2); }
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-bottom: 3rem; }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem 1rem; display: flex; flex-direction: column; align-items: center; gap: .75rem; text-align: center; transition: border-color .3s, transform .2s; }
+.stat-card:hover { border-color: var(--cyan); transform: translateY(-4px); }
+.stat-ring { position: relative; width: clamp(80px,10vw,120px); aspect-ratio: 1; }
+.stat-ring svg { width: 100%; height: 100%; }
+.ring-progress { transition: stroke-dashoffset 1.5s cubic-bezier(.17,.67,.38,1); }
+.stat-ring-val { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-hud); font-size: clamp(.9rem,1.5vw,1.2rem); font-weight: 700; color: var(--cyan); }
+.stat-label { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--white); }
+.stat-sub   { font-size: .78rem; color: var(--muted); line-height: 1.4; }
+.waveform   { display: flex; flex-direction: column; gap: .75rem; }
+.wave-label { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; color: var(--muted); }
+.wave-bars  { display: flex; align-items: center; gap: 3px; height: 60px; }
+.wave-bar   { flex: 1; height: var(--h); background: var(--cyan); border-radius: 1px; opacity: 0.6; animation: wave-anim calc(.6s + var(--delay, 0s)) ease-in-out infinite alternate; }
+.wave-bar:nth-child(odd)  { --delay: 0s;   }
+.wave-bar:nth-child(even) { --delay: 0.3s; }
+@keyframes wave-anim { to{ opacity:1; height: calc(var(--h) * 0.7); } }
+
+/* --- TIMELINE --- */
+.timeline { position: relative; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; }
+.timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--border) 5%, var(--border) 95%, transparent); transform: translateX(-50%); }
+.timeline-item { display: grid; grid-template-columns: 1fr 2rem 1fr; gap: 0 1rem; padding: 2rem 0; align-items: start; }
+.timeline-item .tl-content { grid-column: 1; text-align: right; }
+.timeline-item .tl-marker  { grid-column: 2; display: flex; flex-direction: column; align-items: center; }
+.timeline-item--right .tl-content { grid-column: 3; grid-row: 1; text-align: left; }
+.timeline-item--right .tl-marker  { grid-column: 2; grid-row: 1; }
+.tl-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); box-shadow: var(--glow-cyan); flex-shrink: 0; position: relative; z-index: 1; }
+.tl-dot--red  { border-color: var(--red);  box-shadow: var(--glow-red);  }
+.tl-dot--neon { border-color: var(--neon); box-shadow: var(--glow-neon); }
+.tl-connector { flex: 1; width: 1px; background: var(--border); min-height: 40px; }
+.tl-date  { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; color: var(--muted); display: block; margin-bottom: .4rem; }
+.tl-title { font-family: var(--font-mono); font-size: .85rem; letter-spacing: .1em; color: var(--cyan); margin-bottom: .5rem; }
+.timeline-item--right .tl-title { color: var(--red); }
+.tl-desc  { font-size: .9rem; color: var(--muted); line-height: 1.65; }
+
+/* --- CONTACT --- */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: start; }
+.contact-tagline { font-size: clamp(1rem,1.4vw,1.1rem); color: rgba(232,240,255,0.75); line-height: 1.75; max-width: 45ch; margin-bottom: 2rem; }
+.contact-details { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 2rem; }
+.contact-details li { display: flex; gap: 1rem; align-items: baseline; }
+.cd-label { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; color: var(--muted); min-width: 6rem; }
+.cd-val   { font-family: var(--font-mono); font-size: .78rem; color: var(--cyan); }
+.contact-encoding { display: flex; flex-direction: column; gap: .4rem; }
+.encoding-label { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; color: var(--muted); }
+.encoding-bar  { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; max-width: 200px; }
+.encoding-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--neon)); animation: encode-anim 4s ease-in-out infinite; }
+@keyframes encode-anim { 0%{width:0%} 60%{width:100%} 80%{width:100%} 100%{width:0%} }
+.sync-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.form-row  { display: flex; flex-direction: column; gap: .4rem; }
+.form-label { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; color: var(--muted); }
+.form-input { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: .75rem 1rem; color: var(--white); font-family: var(--font-body); font-size: .95rem; width: 100%; transition: border-color .2s, box-shadow .2s; appearance: none; }
+.form-input::placeholder { color: var(--muted); font-family: var(--font-mono); font-size: .75rem; }
+.form-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(0,255,255,0.1); }
+.form-select option { background: var(--bg-card2); }
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* --- FOOTER --- */
+.footer { position: relative; z-index: 2; background: var(--bg-card); border-top: 1px solid var(--border); padding: 2.5rem clamp(1.25rem,5vw,5rem); }
+.footer-grid { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: space-between; }
+.footer-brand { display: flex; flex-direction: column; gap: .4rem; }
+.footer-tagline { font-family: var(--font-mono); font-size: .65rem; color: var(--muted); letter-spacing: .1em; }
+.footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-nav a { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; color: var(--muted); transition: color .2s; }
+.footer-nav a:hover { color: var(--cyan); }
+.footer-copy p { font-family: var(--font-mono); font-size: .62rem; color: var(--muted); letter-spacing: .08em; }
+.footer-hash { color: rgba(57,255,20,0.5); margin-top: .25rem; }
+
+/* --- REVEAL ANIMATION --- */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1100px) {
+  .stats-grid    { grid-template-columns: repeat(2,1fr); }
+  .features-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+  .hero-tag, .hero-actions, .hero-counters { justify-content: center; }
+  .hero-subtitle { margin: 0 auto; }
+  .eye-data-stream { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-copy { text-align: left; }
+  .timeline::before { left: 1rem; }
+  .timeline-item { grid-template-columns: 2rem 1fr; }
+  .timeline-item .tl-content, .timeline-item--right .tl-content { grid-column: 2; grid-row: 1; text-align: left; }
+  .timeline-item .tl-marker,  .timeline-item--right .tl-marker  { grid-column: 1; grid-row: 1; }
+}
+@media (max-width: 700px) {
+  .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); padding: 1rem; border-bottom: 1px solid var(--border); }
+  .nav-links.open { display: flex; }
+  .nav-toggle { display: flex; }
+  .nav-status { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feat-card--wide { grid-column: 1; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .hero-counters { flex-direction: column; gap: 1rem; }
+  .counter-divider { display: none; }
+}
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="hud-corner hud-tl" aria-hidden="true"></div>
+  <div class="hud-corner hud-tr" aria-hidden="true"></div>
+  <div class="hud-corner hud-bl" aria-hidden="true"></div>
+  <div class="hud-corner hud-br" aria-hidden="true"></div>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-bracket">[</span><span class="brand-text">NEXUS<span class="brand-accent">7</span></span><span class="brand-bracket">]</span></div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="toggle-line"></span><span class="toggle-line"></span><span class="toggle-line"></span>
+    </button>
+    <ul class="nav-links" role="list">
+      <li><a href="#hero"     class="nav-link">INIT</a></li>
+      <li><a href="#about"    class="nav-link">PROTOCOL</a></li>
+      <li><a href="#features" class="nav-link">AUGMENT</a></li>
+      <li><a href="#stats"    class="nav-link">METRICS</a></li>
+      <li><a href="#timeline" class="nav-link">SEQUENCE</a></li>
+      <li><a href="#contact"  class="nav-link nav-link--cta">SYNC</a></li>
+    </ul>
+    <div class="nav-status" aria-label="System status"><span class="status-dot"></span><span class="status-text">SYS ONLINE</span></div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" class="hero" aria-labelledby="hero-heading">
+    <div class="eye-container" aria-hidden="true">
+      <div class="eye-outer">
+        <div class="eye-ring ring-1"></div>
+        <div class="eye-ring ring-2"></div>
+        <div class="eye-ring ring-3"></div>
+        <div class="eye-iris">
+          <div class="eye-pupil"></div>
+          <div class="eye-scan"></div>
+        </div>
+        <div class="eye-data-stream">
+          <span>01001000 01110101 01101101</span>
+          <span>01100001 01101110 00101011</span>
+          <span>01001101 01100001 01100011</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-tag"><span class="tag-line"></span><span class="tag-text">TECHFEST IIT BOMBAY // PROTOCOL INITIATED</span><span class="tag-line"></span></div>
+      <h1 id="hero-heading" class="hero-title">
+        <span class="title-line title-line--sub">THE NEXT PHASE OF</span>
+        <span class="title-line title-line--main glitch-text" data-text="HUMANITY">HUMANITY</span>
+        <span class="title-line title-line--accent">IS ALREADY HERE</span>
+      </h1>
+      <p class="hero-subtitle">Where <em>carbon</em> meets <em>silicon</em>. Where neurons <span class="typed-word"></span> with algorithms. The cyborg revolution is not coming — it <strong>arrived</strong>.</p>
+      <div class="hero-actions">
+        <a href="#about" class="btn btn--primary"><span class="btn-inner"><span class="btn-icon">▶</span> BEGIN PROTOCOL</span><span class="btn-glow" aria-hidden="true"></span></a>
+        <a href="#contact" class="btn btn--ghost"><span class="btn-inner">NEURAL SYNC</span></a>
+      </div>
+      <div class="hero-counters" aria-label="System metrics">
+        <div class="counter-item"><span class="counter-val" data-target="99.8">00.0</span><span class="counter-unit">%</span><span class="counter-label">UPTIME</span></div>
+        <div class="counter-divider">//</div>
+        <div class="counter-item"><span class="counter-val" data-target="2048">0</span><span class="counter-unit">ms</span><span class="counter-label">LATENCY</span></div>
+        <div class="counter-divider">//</div>
+        <div class="counter-item"><span class="counter-val" data-target="512">0</span><span class="counter-unit">TB</span><span class="counter-label">MEMORY</span></div>
+      </div>
+    </div>
+    <div class="scroll-indicator" aria-hidden="true"><span class="scroll-label">SCROLL</span><div class="scroll-bar"><div class="scroll-fill"></div></div></div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker-track">
+      <span>NEURAL SYNC ACTIVE</span><span class="ticker-sep">◆</span><span>EXOSKELETON v4.2 STABLE</span><span class="ticker-sep">◆</span><span>RETINAL HUD ONLINE</span><span class="ticker-sep">◆</span><span>CORTEX LINK ESTABLISHED</span><span class="ticker-sep">◆</span><span>BIOMETRIC SCAN PASS</span><span class="ticker-sep">◆</span><span>AUGMENTATION LEVEL: OMEGA</span><span class="ticker-sep">◆</span><span>MEMORY UPLOAD: 78%</span><span class="ticker-sep">◆</span><span>NEURAL SYNC ACTIVE</span><span class="ticker-sep">◆</span><span>EXOSKELETON v4.2 STABLE</span><span class="ticker-sep">◆</span><span>RETINAL HUD ONLINE</span><span class="ticker-sep">◆</span><span>CORTEX LINK ESTABLISHED</span><span class="ticker-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" class="about section" aria-labelledby="about-heading">
+    <div class="section-header"><span class="section-prefix">// 01</span><h2 id="about-heading" class="section-title">PROTOCOL OVERVIEW</h2><div class="section-line"></div></div>
+    <div class="about-grid">
+      <div class="about-visual" aria-hidden="true">
+        <div class="body-diagram">
+          <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="100" cy="50" rx="35" ry="42" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <circle cx="100" cy="50" r="22" fill="none" stroke="var(--neon)" stroke-width="1" opacity="0.6"/>
+            <circle cx="88" cy="46" r="6" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <circle cx="88" cy="46" r="3" fill="var(--red)" opacity="0.7"/>
+            <circle cx="112" cy="46" r="6" fill="none" stroke="var(--cyan)" stroke-width="1.2"/>
+            <circle cx="112" cy="46" r="3" fill="none" stroke="var(--cyan)" stroke-width="1"/>
+            <line x1="100" y1="8" x2="100" y2="20" stroke="var(--neon)" stroke-width="1.5"/>
+            <circle cx="100" cy="6" r="3" fill="var(--neon)" class="pulse-dot"/>
+            <rect x="90" y="90" width="20" height="20" fill="none" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect x="65" y="110" width="70" height="90" rx="5" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="5 2"/>
+            <polygon points="80,120 120,120 130,160 70,160" fill="none" stroke="var(--neon)" stroke-width="1" opacity="0.8"/>
+            <ellipse cx="100" cy="145" rx="14" ry="18" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <ellipse cx="100" cy="145" rx="7" ry="9" fill="var(--red)" opacity="0.3" class="pulse-core"/>
+            <rect x="25" y="115" width="38" height="16" rx="4" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <rect x="15" y="175" width="30" height="14" rx="3" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <line x1="25" y1="131" x2="25" y2="175" stroke="var(--red)" stroke-width="1.5"/>
+            <line x1="45" y1="131" x2="45" y2="175" stroke="var(--red)" stroke-width="1"/>
+            <rect x="137" y="115" width="38" height="16" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <rect x="145" y="175" width="30" height="14" rx="3" fill="none" stroke="var(--cyan)" stroke-width="1.2" stroke-dasharray="2 2"/>
+            <line x1="155" y1="131" x2="155" y2="175" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <line x1="100" y1="200" x2="100" y2="240" stroke="var(--neon)" stroke-width="2"/>
+            <circle cx="100" cy="215" r="4" fill="none" stroke="var(--neon)" stroke-width="1"/>
+            <circle cx="100" cy="230" r="4" fill="none" stroke="var(--neon)" stroke-width="1"/>
+            <rect x="70" y="200" width="26" height="80" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <rect x="104" y="200" width="26" height="80" rx="4" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <rect x="65" y="278" width="34" height="14" rx="3" fill="none" stroke="var(--cyan)" stroke-width="1.2" stroke-dasharray="3 2"/>
+            <rect x="101" y="278" width="34" height="14" rx="3" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <line x1="0" y1="145" x2="65" y2="145" stroke="var(--neon)" stroke-width="0.5" stroke-dasharray="6 3" opacity="0.5"/>
+            <line x1="135" y1="145" x2="200" y2="145" stroke="var(--neon)" stroke-width="0.5" stroke-dasharray="6 3" opacity="0.5"/>
+          </svg>
+          <div class="diagram-label" style="top:2%;left:55%">NEURAL LINK</div>
+          <div class="diagram-label" style="top:18%;left:-8%">CORTEX MAP</div>
+          <div class="diagram-label diagram-label--red" style="top:35%;left:-15%">MECH ARM</div>
+          <div class="diagram-label" style="top:35%;right:-8%">BIO ARM</div>
+          <div class="diagram-label diagram-label--red" style="top:54%;left:55%">POWER CORE</div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="about-intro">The boundary between human and machine has dissolved. NEXUS-7 represents the apex of bio-mechanical integration — a living system where thought becomes command and silicon augments synapses.</p>
+        <div class="about-pillars">
+          <div class="pillar" tabindex="0"><div class="pillar-icon">⬡</div><h3 class="pillar-title">NEURAL BRIDGE</h3><p class="pillar-desc">Direct cortex-to-machine interface with sub-millisecond response. Thought becomes action.</p><div class="pillar-bar"><div class="pillar-fill" data-width="92"></div></div><span class="pillar-pct">92%</span></div>
+          <div class="pillar" tabindex="0"><div class="pillar-icon">⬡</div><h3 class="pillar-title">EXO FRAME</h3><p class="pillar-desc">Titanium-graphene composite skeleton amplifies strength by 40× and absorbs kinetic impact.</p><div class="pillar-bar"><div class="pillar-fill" data-width="78"></div></div><span class="pillar-pct">78%</span></div>
+          <div class="pillar" tabindex="0"><div class="pillar-icon">⬡</div><h3 class="pillar-title">RETINAL HUD</h3><p class="pillar-desc">Augmented reality overlay renders real-time threat data, navigation, and biometric feeds.</p><div class="pillar-bar"><div class="pillar-fill" data-width="87"></div></div><span class="pillar-pct">87%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="features section" aria-labelledby="features-heading">
+    <div class="section-header"><span class="section-prefix">// 02</span><h2 id="features-heading" class="section-title">AUGMENTATION MODULES</h2><div class="section-line"></div></div>
+    <div class="features-grid">
+      <article class="feat-card" tabindex="0">
+        <div class="feat-card__top"><div class="feat-icon"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 20 Q20 8 28 20 Q20 32 12 20" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="4" fill="currentColor" opacity="0.5"/></svg></div><span class="feat-badge">MODULE 01</span></div>
+        <h3 class="feat-title">COGNITIVE OVERRIDE</h3>
+        <p class="feat-desc">A secondary processing unit embedded in the prefrontal lobe. Runs parallel decision trees at 4.7 GHz while your biological brain handles emotion and creativity.</p>
+        <ul class="feat-specs"><li><span class="spec-key">CLOCK</span><span class="spec-val">4.7 GHz</span></li><li><span class="spec-key">CACHE</span><span class="spec-val">512 MB</span></li><li><span class="spec-key">POWER</span><span class="spec-val">0.3 W</span></li></ul>
+        <div class="feat-footer"><div class="feat-status"><span class="status-dot"></span>ACTIVE</div></div>
+      </article>
+      <article class="feat-card feat-card--highlight" tabindex="0">
+        <div class="feat-card__top"><div class="feat-icon"><svg width="40" height="40" viewBox="0 0 40 40"><rect x="4" y="12" width="32" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="12" x2="12" y2="28" stroke="currentColor" stroke-width="1"/><line x1="20" y1="12" x2="20" y2="28" stroke="currentColor" stroke-width="1"/><line x1="28" y1="12" x2="28" y2="28" stroke="currentColor" stroke-width="1"/><circle cx="20" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="9" x2="20" y2="12" stroke="currentColor" stroke-width="1.5"/></svg></div><span class="feat-badge feat-badge--accent">MODULE 02</span></div>
+        <h3 class="feat-title">PHANTOM LIMB SYS</h3>
+        <p class="feat-desc">Prosthetic limbs with 10,000-point haptic feedback. The nervous system is tricked so completely that sensory data feels indistinguishable from flesh.</p>
+        <ul class="feat-specs"><li><span class="spec-key">HAPTICS</span><span class="spec-val">10,000 pts</span></li><li><span class="spec-key">GRIP</span><span class="spec-val">200 kg</span></li><li><span class="spec-key">FEEL</span><span class="spec-val">99.4%</span></li></ul>
+        <div class="feat-footer"><div class="feat-status feat-status--red"><span class="status-dot status-dot--red"></span>CALIBRATING</div></div>
+      </article>
+      <article class="feat-card" tabindex="0">
+        <div class="feat-card__top"><div class="feat-icon"><svg width="40" height="40" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="16" ry="10" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="2" fill="currentColor"/><line x1="4" y1="20" x2="14" y2="20" stroke="currentColor" stroke-width="1"/><line x1="26" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="1"/></svg></div><span class="feat-badge">MODULE 03</span></div>
+        <h3 class="feat-title">OPTIC SPECTRUM</h3>
+        <p class="feat-desc">Retinal implants extend vision across UV, infrared and EM spectrums. Thermal imaging, night vision, and 12× optical zoom baked into a 2mm lens.</p>
+        <ul class="feat-specs"><li><span class="spec-key">ZOOM</span><span class="spec-val">12×</span></li><li><span class="spec-key">RANGE</span><span class="spec-val">UV–IR</span></li><li><span class="spec-key">RES</span><span class="spec-val">48 MP</span></li></ul>
+        <div class="feat-footer"><div class="feat-status"><span class="status-dot"></span>ACTIVE</div></div>
+      </article>
+      <article class="feat-card" tabindex="0">
+        <div class="feat-card__top"><div class="feat-icon"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 32 C20 32 6 22 6 14 C6 9 10 6 14 6 C17 6 20 9 20 9 C20 9 23 6 26 6 C30 6 34 9 34 14 C34 22 20 32 20 32Z" fill="none" stroke="currentColor" stroke-width="1.5"/><polyline points="4,20 10,20 14,14 18,26 22,18 26,22 30,20 36,20" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.7"/></svg></div><span class="feat-badge">MODULE 04</span></div>
+        <h3 class="feat-title">CARDIO DRIVE</h3>
+        <p class="feat-desc">Synthetic nano-heart runs in parallel with the biological one. Regulates blood pressure, filters toxins in real time, and delivers oxygen bursts on demand.</p>
+        <ul class="feat-specs"><li><span class="spec-key">BPM</span><span class="spec-val">ADAPTIVE</span></li><li><span class="spec-key">FILTER</span><span class="spec-val">99.9%</span></li><li><span class="spec-key">O₂</span><span class="spec-val">+340%</span></li></ul>
+        <div class="feat-footer"><div class="feat-status"><span class="status-dot"></span>ACTIVE</div></div>
+      </article>
+      <article class="feat-card feat-card--wide" tabindex="0">
+        <div class="feat-card__top"><div class="feat-icon"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="32" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="32" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="1"/><line x1="11" y1="14" x2="17" y2="18" stroke="currentColor" stroke-width="1"/><line x1="29" y1="14" x2="23" y2="18" stroke="currentColor" stroke-width="1"/><line x1="11" y1="26" x2="17" y2="22" stroke="currentColor" stroke-width="1"/><line x1="29" y1="26" x2="23" y2="22" stroke="currentColor" stroke-width="1"/></svg></div><span class="feat-badge feat-badge--wide">MODULE 05 — FLAGSHIP</span></div>
+        <h3 class="feat-title">CORTEX LINK NETWORK</h3>
+        <p class="feat-desc">Mesh-based brain-to-brain and brain-to-cloud architecture. Share thoughts, memory fragments, and skill sets with other NEXUS-7 units within a 300m radius. Real-time collective intelligence without losing individual autonomy.</p>
+        <ul class="feat-specs feat-specs--row"><li><span class="spec-key">RANGE</span><span class="spec-val">300 m</span></li><li><span class="spec-key">NODES</span><span class="spec-val">∞</span></li><li><span class="spec-key">LATENCY</span><span class="spec-val">0.4 ms</span></li><li><span class="spec-key">BAND</span><span class="spec-val">10 Gbps</span></li></ul>
+        <div class="feat-footer"><div class="feat-status"><span class="status-dot"></span>ACTIVE — 14 NODES LINKED</div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats" class="stats-section section" aria-labelledby="stats-heading">
+    <div class="section-header"><span class="section-prefix">// 03</span><h2 id="stats-heading" class="section-title">SYSTEM METRICS</h2><div class="section-line"></div></div>
+    <div class="stats-grid">
+      <div class="stat-card" tabindex="0"><div class="stat-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="6"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="90"/></svg><div class="stat-ring-val">90%</div></div><h3 class="stat-label">BIOMECH SYNC</h3><p class="stat-sub">Neural-motor integration index</p></div>
+      <div class="stat-card" tabindex="0"><div class="stat-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,0,68,0.1)" stroke-width="6"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--red)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="80"/></svg><div class="stat-ring-val" style="color:var(--red)">80%</div></div><h3 class="stat-label">THREAT RESPONSE</h3><p class="stat-sub">Reflex acceleration multiplier</p></div>
+      <div class="stat-card" tabindex="0"><div class="stat-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(57,255,20,0.1)" stroke-width="6"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--neon)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="95"/></svg><div class="stat-ring-val" style="color:var(--neon)">95%</div></div><h3 class="stat-label">COGNITIVE AMP</h3><p class="stat-sub">Processing bandwidth enhancement</p></div>
+      <div class="stat-card" tabindex="0"><div class="stat-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="6"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="70"/></svg><div class="stat-ring-val">70%</div></div><h3 class="stat-label">POWER RESERVE</h3><p class="stat-sub">Micro-fusion cell charge level</p></div>
+    </div>
+    <div class="waveform" aria-hidden="true">
+      <div class="wave-label">BIO-SIGNAL WAVEFORM // LIVE</div>
+      <div class="wave-bars">
+        <div class="wave-bar" style="--h:30%"></div><div class="wave-bar" style="--h:60%"></div><div class="wave-bar" style="--h:80%"></div><div class="wave-bar" style="--h:45%"></div><div class="wave-bar" style="--h:90%"></div><div class="wave-bar" style="--h:55%"></div><div class="wave-bar" style="--h:70%"></div><div class="wave-bar" style="--h:35%"></div><div class="wave-bar" style="--h:95%"></div><div class="wave-bar" style="--h:50%"></div><div class="wave-bar" style="--h:75%"></div><div class="wave-bar" style="--h:40%"></div><div class="wave-bar" style="--h:85%"></div><div class="wave-bar" style="--h:60%"></div><div class="wave-bar" style="--h:30%"></div><div class="wave-bar" style="--h:65%"></div><div class="wave-bar" style="--h:50%"></div><div class="wave-bar" style="--h:80%"></div><div class="wave-bar" style="--h:45%"></div><div class="wave-bar" style="--h:70%"></div><div class="wave-bar" style="--h:90%"></div><div class="wave-bar" style="--h:55%"></div><div class="wave-bar" style="--h:35%"></div><div class="wave-bar" style="--h:75%"></div><div class="wave-bar" style="--h:60%"></div><div class="wave-bar" style="--h:40%"></div><div class="wave-bar" style="--h:85%"></div><div class="wave-bar" style="--h:50%"></div><div class="wave-bar" style="--h:95%"></div><div class="wave-bar" style="--h:30%"></div><div class="wave-bar" style="--h:70%"></div><div class="wave-bar" style="--h:80%"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline" class="timeline-section section" aria-labelledby="timeline-heading">
+    <div class="section-header"><span class="section-prefix">// 04</span><h2 id="timeline-heading" class="section-title">EVOLUTION SEQUENCE</h2><div class="section-line"></div></div>
+    <ol class="timeline" role="list">
+      <li class="timeline-item" tabindex="0"><div class="tl-marker"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><span class="tl-date">2024 // PHASE I</span><h3 class="tl-title">RETINAL IMPLANTS GO PUBLIC</h3><p class="tl-desc">First commercially available retinal AR overlays reach mass market. 2.1 million units deployed in year one with a 98.7% surgical success rate.</p></div></li>
+      <li class="timeline-item timeline-item--right" tabindex="0"><div class="tl-marker"><div class="tl-dot tl-dot--red"></div><div class="tl-connector"></div></div><div class="tl-content"><span class="tl-date">2026 // PHASE II</span><h3 class="tl-title">NEURAL MESH FRAMEWORK</h3><p class="tl-desc">Non-invasive cortical mesh achieves 1,024-channel bandwidth. Paralysis patients regain full motor control. The first human types at 400 WPM by thought alone.</p></div></li>
+      <li class="timeline-item" tabindex="0"><div class="tl-marker"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><span class="tl-date">2029 // PHASE III</span><h3 class="tl-title">EXO-BONE INTEGRATION</h3><p class="tl-desc">Carbon-graphene skeletal reinforcement passes FDA trials. Soldiers and first responders adopt the framework. Civilian access projected within 18 months.</p></div></li>
+      <li class="timeline-item timeline-item--right" tabindex="0"><div class="tl-marker"><div class="tl-dot tl-dot--red"></div><div class="tl-connector"></div></div><div class="tl-content"><span class="tl-date">2033 // PHASE IV</span><h3 class="tl-title">CORTEX-CLOUD BRIDGE</h3><p class="tl-desc">Persistent cloud memory backup launches. Humans can offload up to 40% of short-term memory processing to low-latency edge servers — total recall guaranteed.</p></div></li>
+      <li class="timeline-item" tabindex="0"><div class="tl-marker"><div class="tl-dot tl-dot--neon"></div></div><div class="tl-content"><span class="tl-date">2038 // NEXUS-7</span><h3 class="tl-title">FULL INTEGRATION ACHIEVED</h3><p class="tl-desc">NEXUS-7 protocol unifies all modules into a single coherent bio-digital consciousness. The line between human and machine becomes a philosophical question, not a biological one.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section section" aria-labelledby="contact-heading">
+    <div class="section-header"><span class="section-prefix">// 05</span><h2 id="contact-heading" class="section-title">INITIATE SYNC</h2><div class="section-line"></div></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="contact-tagline">Ready to cross the threshold? Submit your neural signature and we will establish a direct cortex link within 48 hours.</p>
+        <ul class="contact-details" role="list">
+          <li><span class="cd-label">SIGNAL</span><span class="cd-val">nexus7@evolution.io</span></li>
+          <li><span class="cd-label">SECTOR</span><span class="cd-val">IIT Bombay, Powai — Node 07</span></li>
+          <li><span class="cd-label">FREQUENCY</span><span class="cd-val">2.4 GHz Neural Band</span></li>
+        </ul>
+        <div class="contact-encoding"><span class="encoding-label">ENCODING // AES-NEXUS-512</span><div class="encoding-bar"><div class="encoding-fill"></div></div></div>
+      </div>
+      <form class="sync-form" novalidate aria-label="Neural sync request form">
+        <div class="form-row"><label for="name" class="form-label">DESIGNATION</label><input type="text" id="name" name="name" class="form-input" placeholder="Your name / unit ID" required autocomplete="name"/></div>
+        <div class="form-row"><label for="email" class="form-label">SIGNAL ADDRESS</label><input type="email" id="email" name="email" class="form-input" placeholder="your@signal.io" required autocomplete="email"/></div>
+        <div class="form-row"><label for="module" class="form-label">REQUEST MODULE</label><select id="module" name="module" class="form-input form-select"><option value="">— SELECT AUGMENTATION —</option><option value="neural">Neural Bridge</option><option value="optic">Optic Spectrum</option><option value="exo">Exo Frame</option><option value="cortex">Cortex Link</option><option value="cardio">Cardio Drive</option></select></div>
+        <div class="form-row"><label for="message" class="form-label">TRANSMISSION</label><textarea id="message" name="message" class="form-input form-textarea" rows="4" placeholder="Describe your augmentation requirements..."></textarea></div>
+        <button type="submit" class="btn btn--primary btn--full"><span class="btn-inner"><span class="btn-icon">◈</span> TRANSMIT REQUEST</span><span class="btn-glow" aria-hidden="true"></span></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand"><span class="brand-bracket">[</span><span class="brand-text">NEXUS<span class="brand-accent">7</span></span><span class="brand-bracket">]</span><p class="footer-tagline">Human Evolution Protocol — Est. 2024</p></div>
+      <nav class="footer-nav" aria-label="Footer navigation"><a href="#hero">INIT</a><a href="#about">PROTOCOL</a><a href="#features">AUGMENT</a><a href="#stats">METRICS</a><a href="#timeline">SEQUENCE</a></nav>
+      <div class="footer-copy"><p>© 2026 NEXUS-7 CORP // ALL AUGMENTATIONS RESERVED</p><p class="footer-hash">SHA: 7F3D9C1B4A2E</p></div>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* PARTICLES */
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 5;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = -(Math.random() * 0.6 + 0.2);
+      this.size  = Math.random() * 1.5 + 0.3;
+      this.life  = 1;
+      this.decay = Math.random() * 0.003 + 0.001;
+      this.color = Math.random() > 0.6 ? '#00ffff' : Math.random() > 0.5 ? '#ff0044' : '#39ff14';
+    }
+    update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; if (this.life <= 0 || this.y < -5) this.reset(false); }
+    draw()   { ctx.save(); ctx.globalAlpha = this.life * 0.7; ctx.fillStyle = this.color; ctx.shadowColor = this.color; ctx.shadowBlur = 4; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+  }
+  resizeCanvas();
+  particles = Array.from({ length: 90 }, () => new Particle());
+  (function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); })();
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+
+  /* NAVBAR */
+  const navbar   = document.querySelector('.navbar');
+  const toggle   = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  window.addEventListener('scroll', () => { navbar.style.background = window.scrollY > 60 ? 'rgba(3,7,15,0.97)' : 'rgba(3,7,15,0.88)'; }, { passive: true });
+  if (toggle && navLinks) {
+    toggle.addEventListener('click', () => { const o = navLinks.classList.toggle('open'); toggle.setAttribute('aria-expanded', String(o)); });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navLinks.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }));
+  }
+
+  /* TYPING */
+  const typedEl = document.querySelector('.typed-word');
+  if (typedEl) {
+    const words = ['fuses','merges','syncs','bonds','links'];
+    let wi = 0, ci = 0, del = false;
+    function type() {
+      const w = words[wi];
+      if (!del) { typedEl.textContent = w.slice(0,++ci); if (ci===w.length){del=true;setTimeout(type,1600);return;} }
+      else       { typedEl.textContent = w.slice(0,--ci); if (ci===0){del=false;wi=(wi+1)%words.length;} }
+      setTimeout(type, del ? 60 : 90);
+    }
+    setTimeout(type, 600);
+  }
+
+  /* COUNTERS */
+  function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+  function animateCounter(el, target, dec) {
+    const start = performance.now();
+    (function step(now) {
+      const p = Math.min((now-start)/2000, 1), v = target * easeOut(p);
+      el.textContent = dec ? v.toFixed(1) : Math.floor(v);
+      if (p < 1) requestAnimationFrame(step);
+    })(start);
+  }
+  let countersStarted = false;
+  function startCounters() {
+    if (countersStarted) return; countersStarted = true;
+    document.querySelectorAll('.counter-val').forEach(el => { const t = parseFloat(el.dataset.target); animateCounter(el, t, t%1!==0?1:0); });
+  }
+
+  /* INTERSECTION OBSERVERS */
+  // Reveal
+  const reveals = [...document.querySelectorAll('.feat-card,.stat-card,.timeline-item,.pillar,.section-header')];
+  reveals.forEach(el => el.classList.add('reveal'));
+  new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } }), { threshold: 0.12 }).observe
+  ? (revObs => reveals.forEach(el => revObs.observe(el)))(new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting){e.target.classList.add('visible');} }), { threshold: 0.12 }))
+  : reveals.forEach(el => el.classList.add('visible'));
+
+  // Counters on hero
+  const heroEl = document.getElementById('hero');
+  if (heroEl) { const ho = new IntersectionObserver(e => { if(e[0].isIntersecting){startCounters();ho.disconnect();} },{threshold:0.3}); ho.observe(heroEl); }
+
+  // Pillar bars
+  const barObs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.style.width=e.target.dataset.width+'%';barObs.unobserve(e.target);} }),{threshold:0.5});
+  document.querySelectorAll('.pillar-fill').forEach(b => barObs.observe(b));
+
+  // Ring charts
+  const CIRC = 2 * Math.PI * 42;
+  const ringObs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.style.strokeDashoffset=CIRC*(1-parseFloat(e.target.dataset.pct)/100);ringObs.unobserve(e.target);} }),{threshold:0.4});
+  document.querySelectorAll('.ring-progress').forEach(r => ringObs.observe(r));
+
+  /* FORM */
+  const form = document.querySelector('.sync-form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]'), span = btn.querySelector('.btn-inner');
+      span.textContent = '✓ TRANSMISSION RECEIVED';
+      btn.disabled = true; btn.style.borderColor = 'var(--neon)'; btn.style.color = 'var(--neon)';
+      setTimeout(() => { span.innerHTML = '<span class="btn-icon">◈</span> TRANSMIT REQUEST'; btn.disabled=false; btn.style.borderColor=''; btn.style.color=''; form.reset(); }, 3000);
+    });
+  }
+
+  /* EYE TRACKING */
+  const pupil = document.querySelector('.eye-pupil');
+  if (pupil && window.matchMedia('(pointer:fine)').matches) {
+    const iris = document.querySelector('.eye-iris');
+    document.addEventListener('mousemove', e => {
+      const r = iris.getBoundingClientRect(), cx = r.left+r.width/2, cy = r.top+r.height/2;
+      const angle = Math.atan2(e.clientY-cy, e.clientX-cx), dist = Math.min(8, Math.hypot(e.clientX-cx,e.clientY-cy)*0.1);
+      pupil.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`;
+    }, { passive: true });
+  }
+
+  /* EASTER EGG */
+  let seq = '';
+  document.addEventListener('keydown', e => {
+    seq = (seq + e.key.toLowerCase()).slice(-6);
+    if (seq.includes('nexus7')) { document.body.style.filter='hue-rotate(180deg)'; setTimeout(()=>document.body.style.filter='',800); seq=''; }
+  });
+
+})();
+</script>
+</body>
+</html>
