@@ -70,8 +70,6 @@ cyborg-landing/
 
 Just download and run the  `NEXUS7.html` in any modern browser. No build step needed.
 
-```bash
-```
 
 ---
 
