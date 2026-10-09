@@ -90,5 +90,4 @@ npx serve .
 ## ✦ Credits
 
 Designed and developed for **Techfest IIT Bombay** — Web Design Challenge.
-
-All code written by hand. No templates. No AI-generated boilerplate.
+Dewansh Dilip Lohakare
