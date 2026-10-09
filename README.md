@@ -56,21 +56,21 @@ The theme is built around the tension between organic humanity and mechanical pr
 
 ```
 cyborg-landing/
-├── index.html      # Full single-page application
+├── NEXUS7.html      # Full single-page application combined .css and .js
 ├── style.css       # All styles — tokens, layout, animations, responsive
 ├── main.js         # Particles, counters, typing, eye tracking, reveals
 └── README.md
+└── LISENSE
+└── index.html
 ```
 
 ---
 
 ## ✦ Running Locally
 
-Just open `index.html` in any modern browser. No build step needed.
+Just download and run the  `NEXUS7.html` in any modern browser. No build step needed.
 
 ```bash
-# Or with a simple server
-npx serve .
 ```
 
 ---
