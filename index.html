@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS-7 | Human Evolution Protocol</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Scanline overlay -->
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- HUD corner decorators -->
+  <div class="hud-corner hud-tl" aria-hidden="true"></div>
+  <div class="hud-corner hud-tr" aria-hidden="true"></div>
+  <div class="hud-corner hud-bl" aria-hidden="true"></div>
+  <div class="hud-corner hud-br" aria-hidden="true"></div>
+
+  <!-- Particle canvas -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="brand-bracket">[</span>
+      <span class="brand-text">NEXUS<span class="brand-accent">7</span></span>
+      <span class="brand-bracket">]</span>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+    </button>
+    <ul class="nav-links" role="list">
+      <li><a href="#hero" class="nav-link" data-text="INIT">INIT</a></li>
+      <li><a href="#about" class="nav-link" data-text="PROTOCOL">PROTOCOL</a></li>
+      <li><a href="#features" class="nav-link" data-text="AUGMENT">AUGMENT</a></li>
+      <li><a href="#stats" class="nav-link" data-text="METRICS">METRICS</a></li>
+      <li><a href="#timeline" class="nav-link" data-text="SEQUENCE">SEQUENCE</a></li>
+      <li><a href="#contact" class="nav-link nav-link--cta" data-text="SYNC">SYNC</a></li>
+    </ul>
+    <div class="nav-status" aria-label="System status">
+      <span class="status-dot"></span>
+      <span class="status-text">SYS ONLINE</span>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section id="hero" class="hero" aria-labelledby="hero-heading">
+    <!-- Glitch eye visual -->
+    <div class="eye-container" aria-hidden="true">
+      <div class="eye-outer">
+        <div class="eye-ring ring-1"></div>
+        <div class="eye-ring ring-2"></div>
+        <div class="eye-ring ring-3"></div>
+        <div class="eye-iris">
+          <div class="eye-pupil"></div>
+          <div class="eye-scan"></div>
+        </div>
+        <div class="eye-data-stream" aria-hidden="true">
+          <span>01001000 01110101 01101101</span>
+          <span>01100001 01101110 00101011</span>
+          <span>01001101 01100001 01100011</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="tag-line"></span>
+        <span class="tag-text">TECHFEST IIT BOMBAY // PROTOCOL INITIATED</span>
+        <span class="tag-line"></span>
+      </div>
+      <h1 id="hero-heading" class="hero-title">
+        <span class="title-line title-line--sub">THE NEXT PHASE OF</span>
+        <span class="title-line title-line--main glitch-text" data-text="HUMANITY">HUMANITY</span>
+        <span class="title-line title-line--accent">IS ALREADY HERE</span>
+      </h1>
+      <p class="hero-subtitle">
+        Where <em>carbon</em> meets <em>silicon</em>. Where neurons 
+        <span class="typed-word"></span> with algorithms.
+        The cyborg revolution is not coming — it <strong>arrived</strong>.
+      </p>
+      <div class="hero-actions">
+        <a href="#about" class="btn btn--primary">
+          <span class="btn-inner">
+            <span class="btn-icon">▶</span>
+            BEGIN PROTOCOL
+          </span>
+          <span class="btn-glow" aria-hidden="true"></span>
+        </a>
+        <a href="#contact" class="btn btn--ghost">
+          <span class="btn-inner">NEURAL SYNC</span>
+        </a>
+      </div>
+      <div class="hero-counters" aria-label="System metrics">
+        <div class="counter-item">
+          <span class="counter-val" data-target="99.8">00.0</span><span class="counter-unit">%</span>
+          <span class="counter-label">UPTIME</span>
+        </div>
+        <div class="counter-divider" aria-hidden="true">//</div>
+        <div class="counter-item">
+          <span class="counter-val" data-target="2048">0</span><span class="counter-unit">ms</span>
+          <span class="counter-label">LATENCY</span>
+        </div>
+        <div class="counter-divider" aria-hidden="true">//</div>
+        <div class="counter-item">
+          <span class="counter-val" data-target="512">0</span><span class="counter-unit">TB</span>
+          <span class="counter-label">MEMORY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <span class="scroll-label">SCROLL</span>
+      <div class="scroll-bar">
+        <div class="scroll-fill"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TICKER ========== -->
+  <div class="ticker-wrap" aria-hidden="true" role="presentation">
+    <div class="ticker-track">
+      <span>NEURAL SYNC ACTIVE</span>
+      <span class="ticker-sep">◆</span>
+      <span>EXOSKELETON v4.2 STABLE</span>
+      <span class="ticker-sep">◆</span>
+      <span>RETINAL HUD ONLINE</span>
+      <span class="ticker-sep">◆</span>
+      <span>CORTEX LINK ESTABLISHED</span>
+      <span class="ticker-sep">◆</span>
+      <span>BIOMETRIC SCAN PASS</span>
+      <span class="ticker-sep">◆</span>
+      <span>AUGMENTATION LEVEL: OMEGA</span>
+      <span class="ticker-sep">◆</span>
+      <span>MEMORY UPLOAD: 78%</span>
+      <span class="ticker-sep">◆</span>
+      <span>NEURAL SYNC ACTIVE</span>
+      <span class="ticker-sep">◆</span>
+      <span>EXOSKELETON v4.2 STABLE</span>
+      <span class="ticker-sep">◆</span>
+      <span>RETINAL HUD ONLINE</span>
+      <span class="ticker-sep">◆</span>
+      <span>CORTEX LINK ESTABLISHED</span>
+      <span class="ticker-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ========== ABOUT ========== -->
+  <section id="about" class="about section" aria-labelledby="about-heading">
+    <div class="section-header">
+      <span class="section-prefix">// 01</span>
+      <h2 id="about-heading" class="section-title">PROTOCOL OVERVIEW</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-visual" aria-hidden="true">
+        <div class="body-diagram">
+          <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cyborg body diagram">
+            <!-- Head -->
+            <ellipse cx="100" cy="50" rx="35" ry="42" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <circle cx="100" cy="50" r="22" fill="none" stroke="var(--neon)" stroke-width="1" opacity="0.6"/>
+            <!-- Eye augment left -->
+            <circle cx="88" cy="46" r="6" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <circle cx="88" cy="46" r="3" fill="var(--red)" opacity="0.7"/>
+            <!-- Eye natural right -->
+            <circle cx="112" cy="46" r="6" fill="none" stroke="var(--cyan)" stroke-width="1.2"/>
+            <circle cx="112" cy="46" r="3" fill="none" stroke="var(--cyan)" stroke-width="1"/>
+            <!-- Neural antenna -->
+            <line x1="100" y1="8" x2="100" y2="20" stroke="var(--neon)" stroke-width="1.5"/>
+            <circle cx="100" cy="6" r="3" fill="var(--neon)" class="pulse-dot"/>
+            <!-- Neck -->
+            <rect x="90" y="90" width="20" height="20" fill="none" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="3 2"/>
+            <!-- Torso -->
+            <rect x="65" y="110" width="70" height="90" rx="5" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="5 2"/>
+            <!-- Chest plate -->
+            <polygon points="80,120 120,120 130,160 70,160" fill="none" stroke="var(--neon)" stroke-width="1" opacity="0.8"/>
+            <!-- Core power cell -->
+            <ellipse cx="100" cy="145" rx="14" ry="18" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <ellipse cx="100" cy="145" rx="7" ry="9" fill="var(--red)" opacity="0.3" class="pulse-core"/>
+            <!-- Left arm (mechanical) -->
+            <rect x="25" y="115" width="38" height="16" rx="4" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <rect x="15" y="175" width="30" height="14" rx="3" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <line x1="25" y1="131" x2="25" y2="175" stroke="var(--red)" stroke-width="1.5"/>
+            <line x1="45" y1="131" x2="45" y2="175" stroke="var(--red)" stroke-width="1"/>
+            <!-- Right arm (organic) -->
+            <rect x="137" y="115" width="38" height="16" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <rect x="145" y="175" width="30" height="14" rx="3" fill="none" stroke="var(--cyan)" stroke-width="1.2" stroke-dasharray="2 2"/>
+            <line x1="155" y1="131" x2="155" y2="175" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <!-- Spine connector -->
+            <line x1="100" y1="200" x2="100" y2="240" stroke="var(--neon)" stroke-width="2"/>
+            <circle cx="100" cy="215" r="4" fill="none" stroke="var(--neon)" stroke-width="1"/>
+            <circle cx="100" cy="230" r="4" fill="none" stroke="var(--neon)" stroke-width="1"/>
+            <!-- Legs -->
+            <rect x="70" y="200" width="26" height="80" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <rect x="104" y="200" width="26" height="80" rx="4" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+            <!-- Feet -->
+            <rect x="65" y="278" width="34" height="14" rx="3" fill="none" stroke="var(--cyan)" stroke-width="1.2" stroke-dasharray="3 2"/>
+            <rect x="101" y="278" width="34" height="14" rx="3" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <!-- Data lines -->
+            <line x1="0" y1="145" x2="65" y2="145" stroke="var(--neon)" stroke-width="0.5" stroke-dasharray="6 3" opacity="0.5"/>
+            <line x1="135" y1="145" x2="200" y2="145" stroke="var(--neon)" stroke-width="0.5" stroke-dasharray="6 3" opacity="0.5"/>
+          </svg>
+          <!-- Labels -->
+          <div class="diagram-label" style="top:2%;left:55%">NEURAL LINK</div>
+          <div class="diagram-label" style="top:18%;left:-8%">CORTEX MAP</div>
+          <div class="diagram-label diagram-label--red" style="top:35%;left:-15%">MECH ARM</div>
+          <div class="diagram-label" style="top:35%;right:-8%">BIO ARM</div>
+          <div class="diagram-label diagram-label--red" style="top:54%;left:55%">POWER CORE</div>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <p class="about-intro">
+          The boundary between human and machine has dissolved. NEXUS-7 represents 
+          the apex of bio-mechanical integration — a living system where thought becomes 
+          command and silicon augments synapses.
+        </p>
+        <div class="about-pillars">
+          <div class="pillar" tabindex="0">
+            <div class="pillar-icon" aria-hidden="true">⬡</div>
+            <h3 class="pillar-title">NEURAL BRIDGE</h3>
+            <p class="pillar-desc">Direct cortex-to-machine interface with sub-millisecond response. Thought becomes action.</p>
+            <div class="pillar-bar"><div class="pillar-fill" data-width="92"></div></div>
+            <span class="pillar-pct">92%</span>
+          </div>
+          <div class="pillar" tabindex="0">
+            <div class="pillar-icon" aria-hidden="true">⬡</div>
+            <h3 class="pillar-title">EXO FRAME</h3>
+            <p class="pillar-desc">Titanium-graphene composite skeleton amplifies strength by 40× and absorbs kinetic impact.</p>
+            <div class="pillar-bar"><div class="pillar-fill" data-width="78"></div></div>
+            <span class="pillar-pct">78%</span>
+          </div>
+          <div class="pillar" tabindex="0">
+            <div class="pillar-icon" aria-hidden="true">⬡</div>
+            <h3 class="pillar-title">RETINAL HUD</h3>
+            <p class="pillar-desc">Augmented reality overlay renders real-time threat data, navigation, and biometric feeds.</p>
+            <div class="pillar-bar"><div class="pillar-fill" data-width="87"></div></div>
+            <span class="pillar-pct">87%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section id="features" class="features section" aria-labelledby="features-heading">
+    <div class="section-header">
+      <span class="section-prefix">// 02</span>
+      <h2 id="features-heading" class="section-title">AUGMENTATION MODULES</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <div class="features-grid">
+      <article class="feat-card" tabindex="0" aria-label="Cognitive Override module">
+        <div class="feat-card__top">
+          <div class="feat-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 20 Q20 8 28 20 Q20 32 12 20" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="4" fill="currentColor" opacity="0.5"/></svg>
+          </div>
+          <span class="feat-badge">MODULE 01</span>
+        </div>
+        <h3 class="feat-title">COGNITIVE OVERRIDE</h3>
+        <p class="feat-desc">A secondary processing unit embedded in the prefrontal lobe. Runs parallel decision trees at 4.7 GHz while your biological brain handles emotion and creativity.</p>
+        <ul class="feat-specs" aria-label="Specifications">
+          <li><span class="spec-key">CLOCK</span><span class="spec-val">4.7 GHz</span></li>
+          <li><span class="spec-key">CACHE</span><span class="spec-val">512 MB</span></li>
+          <li><span class="spec-key">POWER</span><span class="spec-val">0.3 W</span></li>
+        </ul>
+        <div class="feat-footer">
+          <div class="feat-status">
+            <span class="status-dot"></span>ACTIVE
+          </div>
+        </div>
+      </article>
+
+      <article class="feat-card feat-card--highlight" tabindex="0" aria-label="Phantom Limb System module">
+        <div class="feat-card__top">
+          <div class="feat-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40"><rect x="4" y="12" width="32" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="12" x2="12" y2="28" stroke="currentColor" stroke-width="1"/><line x1="20" y1="12" x2="20" y2="28" stroke="currentColor" stroke-width="1"/><line x1="28" y1="12" x2="28" y2="28" stroke="currentColor" stroke-width="1"/><circle cx="20" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="9" x2="20" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <span class="feat-badge feat-badge--accent">MODULE 02</span>
+        </div>
+        <h3 class="feat-title">PHANTOM LIMB SYS</h3>
+        <p class="feat-desc">Prosthetic limbs with 10,000-point haptic feedback. The nervous system is tricked so completely that sensory data feels indistinguishable from flesh.</p>
+        <ul class="feat-specs">
+          <li><span class="spec-key">HAPTICS</span><span class="spec-val">10,000 pts</span></li>
+          <li><span class="spec-key">GRIP</span><span class="spec-val">200 kg</span></li>
+          <li><span class="spec-key">FEEL</span><span class="spec-val">99.4%</span></li>
+        </ul>
+        <div class="feat-footer">
+          <div class="feat-status feat-status--red">
+            <span class="status-dot status-dot--red"></span>CALIBRATING
+          </div>
+        </div>
+      </article>
+
+      <article class="feat-card" tabindex="0" aria-label="Optic Spectrum module">
+        <div class="feat-card__top">
+          <div class="feat-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="16" ry="10" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="2" fill="currentColor"/><line x1="4" y1="20" x2="14" y2="20" stroke="currentColor" stroke-width="1"/><line x1="26" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="1"/></svg>
+          </div>
+          <span class="feat-badge">MODULE 03</span>
+        </div>
+        <h3 class="feat-title">OPTIC SPECTRUM</h3>
+        <p class="feat-desc">Retinal implants extend vision across UV, infrared and EM spectrums. Thermal imaging, night vision, and 12× optical zoom baked into a 2mm lens.</p>
+        <ul class="feat-specs">
+          <li><span class="spec-key">ZOOM</span><span class="spec-val">12×</span></li>
+          <li><span class="spec-key">RANGE</span><span class="spec-val">UV–IR</span></li>
+          <li><span class="spec-key">RES</span><span class="spec-val">48 MP</span></li>
+        </ul>
+        <div class="feat-footer">
+          <div class="feat-status">
+            <span class="status-dot"></span>ACTIVE
+          </div>
+        </div>
+      </article>
+
+      <article class="feat-card" tabindex="0" aria-label="Cardio Drive module">
+        <div class="feat-card__top">
+          <div class="feat-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 32 C20 32 6 22 6 14 C6 9 10 6 14 6 C17 6 20 9 20 9 C20 9 23 6 26 6 C30 6 34 9 34 14 C34 22 20 32 20 32Z" fill="none" stroke="currentColor" stroke-width="1.5"/><polyline points="4,20 10,20 14,14 18,26 22,18 26,22 30,20 36,20" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.7"/></svg>
+          </div>
+          <span class="feat-badge">MODULE 04</span>
+        </div>
+        <h3 class="feat-title">CARDIO DRIVE</h3>
+        <p class="feat-desc">Synthetic nano-heart runs in parallel with the biological one. Regulates blood pressure, filters toxins in real time, and delivers oxygen bursts on demand.</p>
+        <ul class="feat-specs">
+          <li><span class="spec-key">BPM</span><span class="spec-val">ADAPTIVE</span></li>
+          <li><span class="spec-key">FILTER</span><span class="spec-val">99.9%</span></li>
+          <li><span class="spec-key">O₂</span><span class="spec-val">+340%</span></li>
+        </ul>
+        <div class="feat-footer">
+          <div class="feat-status">
+            <span class="status-dot"></span>ACTIVE
+          </div>
+        </div>
+      </article>
+
+      <article class="feat-card feat-card--wide" tabindex="0" aria-label="Cortex Link Network module">
+        <div class="feat-card__top">
+          <div class="feat-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="32" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="32" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="1"/><line x1="11" y1="14" x2="17" y2="18" stroke="currentColor" stroke-width="1"/><line x1="29" y1="14" x2="23" y2="18" stroke="currentColor" stroke-width="1"/><line x1="11" y1="26" x2="17" y2="22" stroke="currentColor" stroke-width="1"/><line x1="29" y1="26" x2="23" y2="22" stroke="currentColor" stroke-width="1"/></svg>
+          </div>
+          <span class="feat-badge feat-badge--wide">MODULE 05 — FLAGSHIP</span>
+        </div>
+        <h3 class="feat-title">CORTEX LINK NETWORK</h3>
+        <p class="feat-desc">Mesh-based brain-to-brain and brain-to-cloud architecture. Share thoughts, memory fragments, and skill sets with other NEXUS-7 units within a 300m radius. Real-time collective intelligence without losing individual autonomy.</p>
+        <ul class="feat-specs feat-specs--row">
+          <li><span class="spec-key">RANGE</span><span class="spec-val">300 m</span></li>
+          <li><span class="spec-key">NODES</span><span class="spec-val">∞</span></li>
+          <li><span class="spec-key">LATENCY</span><span class="spec-val">0.4 ms</span></li>
+          <li><span class="spec-key">BAND</span><span class="spec-val">10 Gbps</span></li>
+        </ul>
+        <div class="feat-footer">
+          <div class="feat-status">
+            <span class="status-dot"></span>ACTIVE — 14 NODES LINKED
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== STATS ========== -->
+  <section id="stats" class="stats-section section" aria-labelledby="stats-heading">
+    <div class="section-header">
+      <span class="section-prefix">// 03</span>
+      <h2 id="stats-heading" class="section-title">SYSTEM METRICS</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card" tabindex="0">
+        <div class="stat-ring" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="26.4" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="90"/>
+          </svg>
+          <div class="stat-ring-val">90%</div>
+        </div>
+        <h3 class="stat-label">BIOMECH SYNC</h3>
+        <p class="stat-sub">Neural-motor integration index</p>
+      </div>
+
+      <div class="stat-card" tabindex="0">
+        <div class="stat-ring" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,0,68,0.1)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--red)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="52.8" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="80"/>
+          </svg>
+          <div class="stat-ring-val" style="color:var(--red)">80%</div>
+        </div>
+        <h3 class="stat-label">THREAT RESPONSE</h3>
+        <p class="stat-sub">Reflex acceleration multiplier</p>
+      </div>
+
+      <div class="stat-card" tabindex="0">
+        <div class="stat-ring" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(57,255,20,0.1)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--neon)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="13.2" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="95"/>
+          </svg>
+          <div class="stat-ring-val" style="color:var(--neon)">95%</div>
+        </div>
+        <h3 class="stat-label">COGNITIVE AMP</h3>
+        <p class="stat-sub">Processing bandwidth enhancement</p>
+      </div>
+
+      <div class="stat-card" tabindex="0">
+        <div class="stat-ring" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,255,255,0.1)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="79.2" stroke-linecap="round" transform="rotate(-90 50 50)" class="ring-progress" data-pct="70"/>
+          </svg>
+          <div class="stat-ring-val">70%</div>
+        </div>
+        <h3 class="stat-label">POWER RESERVE</h3>
+        <p class="stat-sub">Micro-fusion cell charge level</p>
+      </div>
+    </div>
+
+    <!-- Waveform bars -->
+    <div class="waveform" aria-hidden="true" role="presentation">
+      <div class="wave-label">BIO-SIGNAL WAVEFORM // LIVE</div>
+      <div class="wave-bars">
+        <div class="wave-bar" style="--h:30%"></div><div class="wave-bar" style="--h:60%"></div>
+        <div class="wave-bar" style="--h:80%"></div><div class="wave-bar" style="--h:45%"></div>
+        <div class="wave-bar" style="--h:90%"></div><div class="wave-bar" style="--h:55%"></div>
+        <div class="wave-bar" style="--h:70%"></div><div class="wave-bar" style="--h:35%"></div>
+        <div class="wave-bar" style="--h:95%"></div><div class="wave-bar" style="--h:50%"></div>
+        <div class="wave-bar" style="--h:75%"></div><div class="wave-bar" style="--h:40%"></div>
+        <div class="wave-bar" style="--h:85%"></div><div class="wave-bar" style="--h:60%"></div>
+        <div class="wave-bar" style="--h:30%"></div><div class="wave-bar" style="--h:65%"></div>
+        <div class="wave-bar" style="--h:50%"></div><div class="wave-bar" style="--h:80%"></div>
+        <div class="wave-bar" style="--h:45%"></div><div class="wave-bar" style="--h:70%"></div>
+        <div class="wave-bar" style="--h:90%"></div><div class="wave-bar" style="--h:55%"></div>
+        <div class="wave-bar" style="--h:35%"></div><div class="wave-bar" style="--h:75%"></div>
+        <div class="wave-bar" style="--h:60%"></div><div class="wave-bar" style="--h:40%"></div>
+        <div class="wave-bar" style="--h:85%"></div><div class="wave-bar" style="--h:50%"></div>
+        <div class="wave-bar" style="--h:95%"></div><div class="wave-bar" style="--h:30%"></div>
+        <div class="wave-bar" style="--h:70%"></div><div class="wave-bar" style="--h:80%"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TIMELINE ========== -->
+  <section id="timeline" class="timeline-section section" aria-labelledby="timeline-heading">
+    <div class="section-header">
+      <span class="section-prefix">// 04</span>
+      <h2 id="timeline-heading" class="section-title">EVOLUTION SEQUENCE</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <ol class="timeline" role="list">
+      <li class="timeline-item" tabindex="0">
+        <div class="tl-marker" aria-hidden="true">
+          <div class="tl-dot"></div>
+          <div class="tl-connector"></div>
+        </div>
+        <div class="tl-content">
+          <span class="tl-date">2024 // PHASE I</span>
+          <h3 class="tl-title">RETINAL IMPLANTS GO PUBLIC</h3>
+          <p class="tl-desc">First commercially available retinal AR overlays reach mass market. 2.1 million units deployed in year one with a 98.7% surgical success rate.</p>
+        </div>
+      </li>
+      <li class="timeline-item timeline-item--right" tabindex="0">
+        <div class="tl-marker" aria-hidden="true">
+          <div class="tl-dot tl-dot--red"></div>
+          <div class="tl-connector"></div>
+        </div>
+        <div class="tl-content">
+          <span class="tl-date">2026 // PHASE II</span>
+          <h3 class="tl-title">NEURAL MESH FRAMEWORK</h3>
+          <p class="tl-desc">Non-invasive cortical mesh achieves 1,024-channel bandwidth. Paralysis patients regain full motor control. The first human types at 400 WPM by thought alone.</p>
+        </div>
+      </li>
+      <li class="timeline-item" tabindex="0">
+        <div class="tl-marker" aria-hidden="true">
+          <div class="tl-dot"></div>
+          <div class="tl-connector"></div>
+        </div>
+        <div class="tl-content">
+          <span class="tl-date">2029 // PHASE III</span>
+          <h3 class="tl-title">EXO-BONE INTEGRATION</h3>
+          <p class="tl-desc">Carbon-graphene skeletal reinforcement passes FDA trials. Soldiers and first responders adopt the framework. Civilian access projected within 18 months.</p>
+        </div>
+      </li>
+      <li class="timeline-item timeline-item--right" tabindex="0">
+        <div class="tl-marker" aria-hidden="true">
+          <div class="tl-dot tl-dot--red"></div>
+          <div class="tl-connector"></div>
+        </div>
+        <div class="tl-content">
+          <span class="tl-date">2033 // PHASE IV</span>
+          <h3 class="tl-title">CORTEX-CLOUD BRIDGE</h3>
+          <p class="tl-desc">Persistent cloud memory backup launches. Humans can offload up to 40% of short-term memory processing to low-latency edge servers — total recall guaranteed.</p>
+        </div>
+      </li>
+      <li class="timeline-item" tabindex="0">
+        <div class="tl-marker" aria-hidden="true">
+          <div class="tl-dot tl-dot--neon"></div>
+        </div>
+        <div class="tl-content">
+          <span class="tl-date">2038 // NEXUS-7</span>
+          <h3 class="tl-title">FULL INTEGRATION ACHIEVED</h3>
+          <p class="tl-desc">NEXUS-7 protocol unifies all modules into a single coherent bio-digital consciousness. The line between human and machine becomes a philosophical question, not a biological one.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ========== CONTACT / SYNC ========== -->
+  <section id="contact" class="contact-section section" aria-labelledby="contact-heading">
+    <div class="section-header">
+      <span class="section-prefix">// 05</span>
+      <h2 id="contact-heading" class="section-title">INITIATE SYNC</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="contact-tagline">Ready to cross the threshold? Submit your neural signature and we will establish a direct cortex link within 48 hours.</p>
+        <ul class="contact-details" role="list">
+          <li>
+            <span class="cd-label">SIGNAL</span>
+            <span class="cd-val">nexus7@evolution.io</span>
+          </li>
+          <li>
+            <span class="cd-label">SECTOR</span>
+            <span class="cd-val">IIT Bombay, Powai — Node 07</span>
+          </li>
+          <li>
+            <span class="cd-label">FREQUENCY</span>
+            <span class="cd-val">2.4 GHz Neural Band</span>
+          </li>
+        </ul>
+        <div class="contact-encoding" aria-hidden="true">
+          <span class="encoding-label">ENCODING // AES-NEXUS-512</span>
+          <div class="encoding-bar">
+            <div class="encoding-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <form class="sync-form" novalidate aria-label="Neural sync request form">
+        <div class="form-row">
+          <label for="name" class="form-label">DESIGNATION</label>
+          <input type="text" id="name" name="name" class="form-input" placeholder="Your name / unit ID" required autocomplete="name"/>
+        </div>
+        <div class="form-row">
+          <label for="email" class="form-label">SIGNAL ADDRESS</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="your@signal.io" required autocomplete="email"/>
+        </div>
+        <div class="form-row">
+          <label for="module" class="form-label">REQUEST MODULE</label>
+          <select id="module" name="module" class="form-input form-select">
+            <option value="">— SELECT AUGMENTATION —</option>
+            <option value="neural">Neural Bridge</option>
+            <option value="optic">Optic Spectrum</option>
+            <option value="exo">Exo Frame</option>
+            <option value="cortex">Cortex Link</option>
+            <option value="cardio">Cardio Drive</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="message" class="form-label">TRANSMISSION</label>
+          <textarea id="message" name="message" class="form-input form-textarea" rows="4" placeholder="Describe your augmentation requirements..."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">
+          <span class="btn-inner">
+            <span class="btn-icon">◈</span>
+            TRANSMIT REQUEST
+          </span>
+          <span class="btn-glow" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="brand-bracket">[</span>
+        <span class="brand-text">NEXUS<span class="brand-accent">7</span></span>
+        <span class="brand-bracket">]</span>
+        <p class="footer-tagline">Human Evolution Protocol — Est. 2024</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#hero">INIT</a>
+        <a href="#about">PROTOCOL</a>
+        <a href="#features">AUGMENT</a>
+        <a href="#stats">METRICS</a>
+        <a href="#timeline">SEQUENCE</a>
+      </nav>
+      <div class="footer-copy">
+        <p>© 2026 NEXUS-7 CORP // ALL AUGMENTATIONS RESERVED</p>
+        <p class="footer-hash" aria-label="Security hash">SHA: 7F3D9C1B4A2E</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
