@@ -2,7 +2,6 @@
 
 > Cyborg-themed responsive landing page — Techfest IIT Bombay Submission
 
-![Preview](preview.png)
 
 ## ✦ Concept
 
